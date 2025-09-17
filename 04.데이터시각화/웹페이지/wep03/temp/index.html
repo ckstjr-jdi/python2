@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>성적관리</title>
+    <style>
+        * {
+            font-family: "Cute Font", sans-serif;
+            font-size: 20px;
+        }
+
+        th, td, h1 {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container my-5">
+        <div>
+            <h1>학생정보</h1>
+            {{info|safe}}
+        </div>
+
+        <div class="my-5">
+            <h1>학생성적</h1>
+            {{score|safe}}
+        </div>
+    </div>
+</body>
+
+</html>
