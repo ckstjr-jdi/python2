@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학생관리</title>
+    <style>
+        * {
+            font-family: "Cute Font", sans-serif;
+            font-size: 30px;
+        }
+
+        th,td,h1 {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 70px;
+        }
+
+        table {
+            border: 3.5px solid #00a11b !important; /* 전체 테두리 */
+            border-radius: 30px; /* 둥근 테두리 */
+            border-collapse: separate;
+            border-spacing: 0;/* 셀 간격 제거 */
+            overflow: hidden;/*둥근 모서리 안에서 내용 잘림*/
+        }
+
+        input.form-control {
+            border: 3.5px solid #00a11b;
+            border-radius: 30px;   /* 둥글게 */
+        }
+
+        button.btn {
+            border: 3.5px solid #00a11b;
+            border-radius: 30px;   /* 둥글게 */
+        }
+
+        form {
+           margin: 0 auto;   /* 수평 가운데 정렬 */
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container my-5">
+        <h1 class="text-center mb-3">학생관리</h1>
+        <div class="row mb-2">
+            <form name="frm" class="col-5">
+                <div class="input-group">
+                    <input name="word" placeholder="검색어" class="form-control">
+                    <button class="btn btn-light">
+                        <img src="{{ url_for('static', filename='icons8-search-50.png') }}" alt="검색" width="30" height="30">
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div id="score"></div>
+        <div id="info" class="mg-3"></div>
+            <div>
+                <button id="btn" class="btn btn-success w-100">그래프출력</button>
+            </div>
+        <div>
+            <img id="image" src="http://placehold.co/500x300" width="100%">
+        </div>
+    </div>
+</body>
+<script>
+    getData();
+
+    $('#btn').on("click", function(){
+        $("#image").attr("src", "/score/graph");
+    });
+
+    $(frm).on("submit", function (e) {
+        e.preventDefault();
+        const word = $(frm.word).val()
+            getData();
+    })
+
+    function getData() {
+        const word = $(frm.word).val();
+        // alert(word);
+        $.ajax({
+            type: 'get',
+            url: '/score/data',
+            data: { word },
+            success: function (data) {
+                console.log(data)
+                $("#score").html(data.score);
+                $("#info").html(data.info);
+            }
+        })
+    }
+</script>
+
+</html>
