@@ -9,13 +9,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>학생관리</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='happy.png') }}">
     <style>
         * {
             font-family: "Cute Font", sans-serif;
             font-size: 30px;
         }
 
-        th,td,h1 {
+        th,
+        td,
+        h1 {
             text-align: center;
         }
 
@@ -24,26 +27,81 @@
         }
 
         table {
-            border: 3.5px solid #00a11b !important; /* 전체 테두리 */
-            border-radius: 30px; /* 둥근 테두리 */
+            border: 3px solid #00a11b !important;
+            /* 전체 테두리 */
+            border-radius: 30px;
+            /* 둥근 테두리 */
             border-collapse: separate;
-            border-spacing: 0;/* 셀 간격 제거 */
-            overflow: hidden;/*둥근 모서리 안에서 내용 잘림*/
-        }
-
-        input.form-control {
-            border: 3.5px solid #00a11b;
-            border-radius: 30px;   /* 둥글게 */
+            border-spacing: 0;
+            /* 셀 간격 제거 */
+            overflow: hidden;
+            /*둥근 모서리 안에서 내용 잘림*/
         }
 
         button.btn {
-            border: 3.5px solid #00a11b;
-            border-radius: 30px;   /* 둥글게 */
+            border: 3px solid #00a11b !important;
+            border-radius: 30px;
+            /* 둥글게 */
         }
 
         form {
-           margin: 0 auto;   /* 수평 가운데 정렬 */
+            margin: 0 auto;
+            /* 수평 가운데 정렬 */
         }
+
+        .nav-link.active {
+            background-color: #00a11b !important;
+            color: white !important;
+            /* 텍스트 색상도 흰색으로 변경 */
+            border-radius: 10px;
+        }
+        .search-box {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 50px 10px 50px; /* 좌우 아이콘 공간 확보 */
+            border: 3px solid #00a11b;
+            border-radius: 30px;
+            font-size: 20px;
+            outline: none;
+        }
+
+        /* 왼쪽 아이콘 */
+        .search-box .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 25px;
+            height: 25px;
+            pointer-events: none; /* 클릭 방해 방지 */
+        }
+
+        /* 오른쪽 버튼 */
+        .search-box .search-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .search-box input {
+            border: 3px solid #00a11b;
+            border-radius: 30px;
+            padding: 10px 50px 10px 50px;
+            transition: all 0.3s ease; /* 부드럽게 효과 */
+        }
+
+        .search-box input:hover,
+        .search-box input:focus {
+            box-shadow: 0 0 10px rgba(0, 161, 27, 0.6); /* 초록빛 그림자 */
+            outline: none; /* 기본 파란 테두리 제거 */
 
     </style>
 </head>
@@ -53,35 +111,68 @@
         <h1 class="text-center mb-3">학생관리</h1>
         <div class="row mb-2">
             <form name="frm" class="col-5">
-                <div class="input-group">
-                    <input name="word" placeholder="검색어" class="form-control">
-                    <button class="btn btn-light">
-                        <img src="{{ url_for('static', filename='icons8-search-50.png') }}" alt="검색" width="30" height="30">
+                <div class="search-box">
+                    <!-- 왼쪽 돋보기 아이콘 -->
+                    <img src="{{ url_for('static', filename='happy.png') }}" class="search-icon">
+                    
+                    <!-- 입력창 -->
+                    <input name="word" placeholder="검색어를 입력해 주세요" class="form-control">
+
+                    <!-- 오른쪽 검색 버튼 -->
+                    <button type="submit" class="search-btn">
+                        <img src="{{ url_for('static', filename='icons8-search-50.png') }}" alt="검색" width="25" height="25">
                     </button>
                 </div>
             </form>
         </div>
-        <div id="score"></div>
-        <div id="info" class="mg-3"></div>
-            <div>
-                <button id="btn" class="btn btn-success w-100">그래프출력</button>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane"
+                    type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
+                    학생성적
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane"
+                    type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">
+                    학생정보
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane"
+                    type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">
+                    성적그래프
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
+                tabindex="0">
+                <div id="score" class="mt-3"></div>
             </div>
-        <div>
-            <img id="image" src="http://placehold.co/500x300" width="100%">
+            <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                <div id="info" class="mt-3"></div>
+            </div>
+            <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+                <div class="mt-3">
+                    <button id="btn" class="btn btn-success w-100">그래프출력</button>
+                </div>
+                <img id="image" src="http://placehold.co/500x300" width="100%">
+            </div>
         </div>
     </div>
 </body>
 <script>
     getData();
 
-    $('#btn').on("click", function(){
+    $('#btn').on("click", function () {
         $("#image").attr("src", "/score/graph");
     });
 
     $(frm).on("submit", function (e) {
         e.preventDefault();
         const word = $(frm.word).val()
-            getData();
+        getData();
     })
 
     function getData() {

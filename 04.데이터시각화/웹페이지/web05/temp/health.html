@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='heart-care.png') }}">
+
+    <style>
+        * {
+            font-family: "Cute Font", sans-serif;
+            font-size: 30px;
+        }
+
+        th,
+        td,
+        h1 {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 70px;
+        }
+
+        table {
+            border: 3px solid #ff4141 !important;
+            /* 전체 테두리 */
+            border-radius: 30px;
+            /* 둥근 테두리 */
+            border-collapse: separate;
+            border-spacing: 0;
+            /* 셀 간격 제거 */
+            overflow: hidden;
+            /*둥근 모서리 안에서 내용 잘림*/
+        }
+
+        button.btn {
+            border: 3px solid #ff4141 !important;
+            border-radius: 30px;
+            /* 둥글게 */
+        }
+
+        form {
+            margin: 0 auto;
+            /* 수평 가운데 정렬 */
+        }
+
+        input.form-control {
+            border: 3px solid #ff4141 !important;
+            border-radius: 30px;
+            /* 둥글게 하고 싶으면 */
+        }
+
+        .input-group {
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .input-group .form-control:focus {
+            box-shadow: none;
+        }
+
+        .input-group-text img {
+            border-radius: 50%;
+            /* 필요시 아이콘 둥글게 */
+        }
+    </style>
+    <title>공공의료기관현황</title>
+</head>
+
+<body>
+    <div class="container m-5">
+        <h1 class="text-center mb-3">공공의료기관현황</h1>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-10">
+                <form name="frm" class="mb-2">
+                    <div class="input-group">
+                        <input name="word" class="form-control" placeholder="검색어">
+                        <button class="btn btn-light">검색</button>
+                    </div>
+                </form>
+                <div id="health"></div>
+                <div class="text-center" id="buttons">
+                    <button class="btn btn-light px-5" id="prev">이전</button>
+                    <span class="px-3" id="page">1/10</span>
+                    <button class="btn btn-light px-5" id="next">다음</button>
+                </div>
+                <div class="my-3">
+                    <img src="" id="image" style="display:none;" width="80%">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+<script>
+    let page = 1;
+    let size = 5;
+
+    $(frm).on("submit", function (e) {
+        e.preventDefault();
+        page = 1;
+        getData();
+    })
+    $("#next").on("click", function () {
+        page++;
+        getData();
+    });
+
+    $("#prev").on("click", function () {
+        page--;
+        getData();
+    });
+
+    getData();
+    function getData() {
+        const word = $(frm.word).val();
+
+        $.ajax({
+            type: "get",
+            url: "/health/data",
+            data: { 'page': page, 'size': size, 'word': word },
+            success: function (data) {
+                $("#health").html(data.table);
+                const count = data.count;
+                const last = Math.ceil(count / size);
+                $("#page").html(`${page}/${last}`);
+
+                if (page == 1) $("#prev").attr("disabled", true);
+                else $("#prev").attr("disabled", false)
+
+                if (page == last) $("#next").attr("disabled", true);
+                else $("#next").attr("disabled", false)
+
+                if (count == 0) $("#buttons").hide();
+                else $("#buttons").show();
+
+                if (count > 0) {
+                    $("#image").show()
+                    $("#image").attr("src", "/health/graph?word=" + word);
+                }
+            }
+        })
+    }
+</script>
+
+</html>
